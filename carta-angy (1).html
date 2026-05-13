@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Para Angy — Mi Todo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@400;700&family=Dancing+Script:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink: #f0e8ff;
+  --deep-purple: #0e0612;
+  --purple-dark: #1a0a2e;
+  --purple-mid: #2d1057;
+  --purple-accent: #6b21a8;
+  --purple-bright: #9333ea;
+  --purple-glow: #c084fc;
+  --purple-pale: #e9d5ff;
+  --gold: #c9a84c;
+  --gold-dim: #7a6230;
+  --rose-dark: #4a0030;
+  --rose: #831843;
+  --rose-bright: #be185d;
+  --silver: #c4b5d4;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--deep-purple);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='4' fill='none' stroke='%239333ea' stroke-width='1.5'/%3E%3Cline x1='10' y1='0' x2='10' y2='6' stroke='%239333ea' stroke-width='1'/%3E%3Cline x1='10' y1='14' x2='10' y2='20' stroke='%239333ea' stroke-width='1'/%3E%3Cline x1='0' y1='10' x2='6' y2='10' stroke='%239333ea' stroke-width='1'/%3E%3Cline x1='14' y1='10' x2='20' y2='10' stroke='%239333ea' stroke-width='1'/%3E%3C/svg%3E") 10 10, crosshair;
+}
+
+/* ── WELCOME SCREEN ── */
+#welcomeScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(ellipse at 50% 40%, #1a0a2e 0%, #0a0418 60%, #060210 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+#welcomeScreen.hiding {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.welcome-inner {
+  text-align: center;
+  padding: 40px;
+  max-width: 540px;
+  animation: welcomeFade 2s ease both;
+}
+
+@keyframes welcomeFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-rose-ring {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 32px;
+  position: relative;
+  animation: roseFloat 5s ease-in-out infinite;
+}
+
+@keyframes roseFloat {
+  0%,100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-12px) rotate(3deg); }
+}
+
+.welcome-title {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  color: var(--purple-pale);
+  text-shadow: 0 0 40px rgba(147,51,234,0.6), 0 0 80px rgba(147,51,234,0.3);
+  margin-bottom: 14px;
+  letter-spacing: 3px;
+}
+
+.welcome-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--purple-glow);
+  letter-spacing: 2px;
+  margin-bottom: 36px;
+  opacity: 0.85;
+}
+
+.welcome-btn {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--purple-pale);
+  letter-spacing: 4px;
+  border: 1px solid rgba(192,132,252,0.4);
+  padding: 12px 32px;
+  animation: pulseBorder 2.5s ease-in-out infinite;
+  transition: all 0.3s;
+}
+
+.welcome-btn:hover {
+  background: rgba(147,51,234,0.15);
+  border-color: var(--purple-bright);
+  box-shadow: 0 0 30px rgba(147,51,234,0.3);
+}
+
+@keyframes pulseBorder {
+  0%,100% { box-shadow: 0 0 10px rgba(192,132,252,0.2); }
+  50%      { box-shadow: 0 0 25px rgba(192,132,252,0.5); }
+}
+
+.welcome-hint {
+  margin-top: 18px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.78rem;
+  color: rgba(192,132,252,0.4);
+  letter-spacing: 2px;
+}
+
+/* Welcome screen stars */
+.w-star {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--purple-pale);
+  pointer-events: none;
+}
+
+/* ── SKY / BG ── */
+.sky {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, #1a0a2e 0%, #0e0618 55%, #060210 100%);
+  z-index: 0;
+}
+
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--purple-pale);
+  animation: twinkle var(--d, 3s) var(--delay, 0s) ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: var(--min, 0.1); transform: scale(1); }
+  to   { opacity: var(--max, 0.8); transform: scale(1.4); }
+}
+
+/* ── MOON ── */
+.moon {
+  position: fixed;
+  top: 40px;
+  right: 80px;
+  width: 90px;
+  height: 90px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.moon-body {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e8d5f5, #b89acc 40%, #7a5a9a);
+  box-shadow: 0 0 30px 8px rgba(147,51,234,0.3), 0 0 80px 20px rgba(107,33,168,0.15);
+  animation: moonFloat 8s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.moon-crater {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(50,20,80,0.3);
+}
+
+@keyframes moonFloat {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-8px) rotate(2deg); }
+}
+
+/* ── HILLS ── */
+.hills {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  pointer-events: none;
+  height: 200px;
+}
+
+/* ── BATS ── */
+.bat {
+  position: fixed;
+  z-index: 3;
+  pointer-events: none;
+  animation: batFly var(--bd, 12s) linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes batFly {
+  0%   { transform: translateX(-60px) translateY(0px) scaleX(1); }
+  25%  { transform: translateX(calc(25vw)) translateY(-30px) scaleX(1); }
+  50%  { transform: translateX(calc(50vw)) translateY(10px) scaleX(-1); }
+  75%  { transform: translateX(calc(75vw)) translateY(-20px) scaleX(-1); }
+  100% { transform: translateX(calc(100vw + 60px)) translateY(0px) scaleX(-1); }
+}
+
+/* ── WRAPPER ── */
+.wrapper {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 20px 120px;
+}
+
+/* ── TITLE SECTION ── */
+.title-area {
+  text-align: center;
+  margin-bottom: 50px;
+  animation: fadeDown 1.8s ease both;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.title-deco {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.title-line {
+  flex: 1;
+  max-width: 120px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--purple-bright));
+}
+.title-line.right {
+  background: linear-gradient(to left, transparent, var(--purple-bright));
+}
+
+.main-title {
+  font-family: 'UnifrakturMaguntia', cursive;
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  color: var(--purple-pale);
+  text-shadow: 0 0 30px rgba(147,51,234,0.5), 0 2px 4px rgba(0,0,0,0.8);
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.sub-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--purple-glow);
+  letter-spacing: 4px;
+  opacity: 0.8;
+}
+
+/* ── PHOTO FRAME ── */
+.photo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+  animation: fadeUp 2s ease 0.4s both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.frame-outer {
+  position: relative;
+  display: inline-block;
+  animation: frameFloat 7s ease-in-out infinite;
+}
+
+@keyframes frameFloat {
+  0%,100% { transform: rotate(-1.5deg) translateY(0); }
+  50%      { transform: rotate(1.5deg) translateY(-10px); }
+}
+
+.frame-svg {
+  position: absolute;
+  inset: -28px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.photo-box {
+  width: 280px;
+  height: 320px;
+  position: relative;
+  background: #100810;
+  overflow: hidden;
+  border: 3px solid #3d1b6e;
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: sepia(20%) saturate(0.9) contrast(110%) brightness(90%);
+  transition: filter 0.6s ease;
+}
+
+.photo-box img:hover {
+  filter: sepia(0%) saturate(1.1) contrast(105%) brightness(100%);
+}
+
+.photo-label {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--purple-glow);
+  white-space: nowrap;
+  letter-spacing: 2px;
+  z-index: 3;
+}
+
+/* ── MUSIC PLAYER (minimal, no upload) ── */
+.music-player {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(14,6,18,0.9);
+  border: 1px solid rgba(147,51,234,0.4);
+  padding: 10px 16px 10px 12px;
+  backdrop-filter: blur(10px);
+  animation: fadeUp 2s ease 1s both;
+}
+
+.music-toggle {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(147,51,234,0.5);
+  background: transparent;
+  color: var(--purple-glow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.music-toggle:hover {
+  background: rgba(147,51,234,0.15);
+  border-color: var(--purple-bright);
+}
+
+.music-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.music-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  color: var(--purple-pale);
+  letter-spacing: 1px;
+}
+
+.music-artist {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  color: var(--purple-glow);
+  font-style: italic;
+}
+
+.music-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 18px;
+}
+
+.bar {
+  width: 3px;
+  background: var(--purple-bright);
+  border-radius: 1px;
+  animation: barDance var(--bs, 0.8s) ease-in-out infinite alternate;
+  opacity: 0.7;
+}
+
+@keyframes barDance {
+  from { height: 4px; }
+  to   { height: var(--bh, 14px); }
+}
+
+.music-bars.paused .bar { animation-play-state: paused; height: 6px; }
+
+/* ── LETTER ── */
+.letter-wrap {
+  position: relative;
+  animation: fadeUp 2s ease 0.7s both;
+}
+
+/* Gothic purple paper */
+.letter-paper {
+  background:
+    linear-gradient(170deg, #1a0838 0%, #140630 40%, #0f0428 100%);
+  padding: 60px 55px 80px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(147,51,234,0.15),
+    0 20px 80px rgba(0,0,0,0.8),
+    inset 0 0 100px rgba(107,33,168,0.08);
+  border: 1px solid rgba(147,51,234,0.2);
+}
+
+/* Subtle texture lines */
+.letter-paper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(147,51,234,0.04) 31px, rgba(147,51,234,0.04) 32px);
+  pointer-events: none;
+}
+
+/* Subtle noise texture */
+.letter-paper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Watermark */
+.letter-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 200px;
+  color: rgba(147,51,234,0.04);
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.letter-content {
+  position: relative;
+  z-index: 3;
+}
+
+.letter-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: rgba(192,132,252,0.6);
+  text-align: right;
+  margin-bottom: 28px;
+  letter-spacing: 1px;
+}
+
+.letter-salutation {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--purple-glow);
+  margin-bottom: 24px;
+  text-shadow: 0 0 20px rgba(147,51,234,0.4);
+}
+
+.letter-body p {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.97rem;
+  color: rgba(233,213,255,0.88);
+  line-height: 2.1;
+  margin-bottom: 22px;
+  text-align: justify;
+}
+
+.letter-body p.italic {
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--purple-glow);
+  text-indent: 0;
+}
+
+.letter-body p.center {
+  text-align: center;
+  font-size: 1.08rem;
+  font-style: italic;
+  color: var(--rose-bright);
+  font-family: 'Dancing Script', cursive;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.letter-body em {
+  font-family: 'Dancing Script', cursive;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: var(--purple-glow);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 28px 0;
+  color: var(--purple-bright);
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(147,51,234,0.4), transparent);
+}
+
+.letter-closing {
+  margin-top: 36px;
+}
+
+.closing-text {
+  font-family: 'Libre Baskerville', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: rgba(192,132,252,0.7);
+  margin-bottom: 16px;
+}
+
+.signature {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--rose-bright);
+  text-shadow: 0 0 20px rgba(190,24,93,0.4);
+}
+
+.postscript {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(147,51,234,0.15);
+}
+
+.postscript p {
+  font-family: 'Libre Baskerville', serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: rgba(192,132,252,0.6);
+  line-height: 1.9;
+}
+
+.postscript strong {
+  font-style: normal;
+  color: var(--purple-pale);
+  font-weight: 700;
+}
+
+/* Wax seal */
+.wax-seal {
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 68px;
+  height: 68px;
+  z-index: 10;
+  animation: sealPulse 4s ease-in-out infinite;
+}
+
+@keyframes sealPulse {
+  0%,100% { filter: drop-shadow(0 0 8px rgba(147,51,234,0.5)); }
+  50%      { filter: drop-shadow(0 0 20px rgba(147,51,234,0.9)); }
+}
+
+/* ── SPIDER WEB corner ── */
+.web-corner {
+  position: fixed;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.25;
+}
+.web-corner.tl { top: 0; left: 0; }
+.web-corner.tr { top: 0; right: 0; transform: scaleX(-1); }
+
+/* ── FALLING PETALS ── */
+.petal {
+  position: fixed;
+  z-index: 3;
+  pointer-events: none;
+  animation: petalFall var(--pd, 10s) linear var(--pdelay, 0s) infinite;
+  opacity: 0;
+  color: var(--purple-bright);
+}
+
+@keyframes petalFall {
+  0%   { transform: translateY(-20px) rotate(0deg) translateX(0); opacity: 0; }
+  5%   { opacity: 0.6; }
+  95%  { opacity: 0.3; }
+  100% { transform: translateY(100vh) rotate(360deg) translateX(var(--px, 30px)); opacity: 0; }
+}
+
+.heart-decor {
+  position: fixed;
+  z-index: 3;
+  pointer-events: none;
+  color: var(--rose-bright);
+  animation: heartFloat var(--hd, 12s) ease-in-out var(--hdelay, 0s) infinite;
+  opacity: 0;
+  font-size: var(--hs, 16px);
+}
+
+@keyframes heartFloat {
+  0%   { transform: translateY(0) scale(0.8); opacity: 0; }
+  10%  { opacity: 0.45; }
+  50%  { transform: translateY(-120px) scale(1.1) rotate(15deg); opacity: 0.3; }
+  100% { transform: translateY(-240px) scale(0.6); opacity: 0; }
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #060210; }
+::-webkit-scrollbar-thumb { background: var(--purple-mid); border-radius: 3px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .letter-paper { padding: 40px 24px 50px; }
+  .photo-box { width: 220px; height: 260px; }
+  .main-title { font-size: 2rem; }
+  .letter-body p { font-size: 0.93rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME SCREEN -->
+<div id="welcomeScreen">
+  <div class="welcome-inner">
+    <!-- Purple rose SVG -->
+    <div class="welcome-rose-ring">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" width="140" height="140">
+        <!-- Outer glow ring -->
+        <circle cx="70" cy="70" r="64" fill="none" stroke="rgba(147,51,234,0.25)" stroke-width="1"/>
+        <circle cx="70" cy="70" r="56" fill="none" stroke="rgba(147,51,234,0.15)" stroke-width="0.5"/>
+        <!-- Rose petals -->
+        <g transform="translate(70,70)">
+          <!-- Outer petals -->
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#6b21a8" opacity="0.7" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#7c3aed" opacity="0.65" transform="rotate(45)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#6b21a8" opacity="0.7" transform="rotate(90)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#7c3aed" opacity="0.65" transform="rotate(135)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#6b21a8" opacity="0.7" transform="rotate(180)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#7c3aed" opacity="0.65" transform="rotate(225)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#6b21a8" opacity="0.7" transform="rotate(270)"/>
+          <ellipse cx="0" cy="-28" rx="10" ry="18" fill="#7c3aed" opacity="0.65" transform="rotate(315)"/>
+          <!-- Mid petals -->
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#9333ea" opacity="0.8" transform="rotate(22.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#a855f7" opacity="0.75" transform="rotate(67.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#9333ea" opacity="0.8" transform="rotate(112.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#a855f7" opacity="0.75" transform="rotate(157.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#9333ea" opacity="0.8" transform="rotate(202.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#a855f7" opacity="0.75" transform="rotate(247.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#9333ea" opacity="0.8" transform="rotate(292.5)"/>
+          <ellipse cx="0" cy="-18" rx="8" ry="13" fill="#a855f7" opacity="0.75" transform="rotate(337.5)"/>
+          <!-- Inner petals -->
+          <ellipse cx="0" cy="-10" rx="6" ry="9" fill="#c084fc" opacity="0.9" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-10" rx="6" ry="9" fill="#d8b4fe" opacity="0.85" transform="rotate(60)"/>
+          <ellipse cx="0" cy="-10" rx="6" ry="9" fill="#c084fc" opacity="0.9" transform="rotate(120)"/>
+          <ellipse cx="0" cy="-10" rx="6" ry="9" fill="#d8b4fe" opacity="0.85" transform="rotate(180)"/>
+          <ellipse cx="0" cy="-10" rx="6" ry="9" fill="#c084fc" opacity="0.9" transform="rotate(240)"/>
+          <ellipse cx="0" cy="-10" rx="6" ry="9" fill="#d8b4fe" opacity="0.85" transform="rotate(300)"/>
+          <!-- Center -->
+          <circle cx="0" cy="0" r="7" fill="#e9d5ff" opacity="0.95"/>
+          <circle cx="0" cy="0" r="4" fill="#f5f0ff"/>
+        </g>
+        <!-- Small leaves -->
+        <ellipse cx="20" cy="108" rx="7" ry="14" fill="#1e0a3a" stroke="rgba(147,51,234,0.4)" stroke-width="0.8" transform="rotate(-30 20 108)"/>
+        <ellipse cx="120" cy="108" rx="7" ry="14" fill="#1e0a3a" stroke="rgba(147,51,234,0.4)" stroke-width="0.8" transform="rotate(30 120 108)"/>
+      </svg>
+    </div>
+
+    <div class="welcome-title">Para Mi Angy</div>
+    <div class="welcome-sub">— una carta escrita desde el alma —</div>
+    <div class="welcome-btn">Abrir carta ✦</div>
+    <div class="welcome-hint">toca en cualquier parte para entrar</div>
+  </div>
+</div>
+
+<audio id="audioPlayer" loop src="cancion.mp3"></audio>
+
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+
+<!-- Moon -->
+<div class="moon">
+  <div class="moon-body">
+    <div class="moon-crater" style="width:12px;height:12px;top:22px;left:30px"></div>
+    <div class="moon-crater" style="width:8px;height:8px;top:45px;left:20px"></div>
+    <div class="moon-crater" style="width:6px;height:6px;top:30px;left:52px"></div>
+  </div>
+</div>
+
+<!-- Hills with purple tint -->
+<svg class="hills" viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0 200 Q100 120 180 160 Q260 110 340 140 Q420 80 520 120 Q600 60 680 100 Q760 40 860 80 Q940 20 1040 60 Q1120 10 1200 50 Q1300 0 1440 40 L1440 200 Z" fill="#080212"/>
+  <path d="M0 200 Q80 150 160 170 Q240 130 320 160 Q400 110 480 140 Q560 90 640 120 L1440 100 L1440 200 Z" fill="#0a0418" opacity="0.8"/>
+  <!-- Dead trees -->
+  <g stroke="#1a0832" stroke-width="1.5" fill="none">
+    <line x1="120" y1="165" x2="120" y2="120"/><line x1="120" y1="130" x2="105" y2="112"/><line x1="120" y1="138" x2="138" y2="118"/><line x1="105" y1="112" x2="96" y2="104"/><line x1="138" y1="118" x2="148" y2="108"/>
+    <line x1="350" y1="148" x2="350" y2="100"/><line x1="350" y1="110" x2="332" y2="92"/><line x1="350" y1="120" x2="370" y2="100"/><line x1="332" y1="92" x2="322" y2="82"/>
+    <line x1="900" y1="88" x2="900" y2="40"/><line x1="900" y1="50" x2="882" y2="32"/><line x1="900" y1="60" x2="920" y2="40"/><line x1="882" y1="32" x2="872" y2="22"/>
+    <line x1="1200" y1="60" x2="1200" y2="15"/><line x1="1200" y1="25" x2="1182" y2="8"/><line x1="1200" y1="35" x2="1220" y2="15"/>
+  </g>
+</svg>
+
+<!-- Spider webs -->
+<svg class="web-corner tl" viewBox="0 0 160 160" width="160" height="160">
+  <g stroke="#9333ea" stroke-width="0.6" fill="none">
+    <line x1="0" y1="0" x2="160" y2="0"/><line x1="0" y1="0" x2="140" y2="30"/><line x1="0" y1="0" x2="110" y2="60"/><line x1="0" y1="0" x2="70" y2="90"/><line x1="0" y1="0" x2="30" y2="130"/><line x1="0" y1="0" x2="0" y2="160"/>
+    <path d="M32 0 Q16 16 0 32"/><path d="M64 0 Q32 32 0 64"/><path d="M96 0 Q48 48 0 96"/><path d="M128 0 Q64 64 0 128"/><path d="M155 5 Q80 80 5 155"/>
+  </g>
+  <circle cx="0" cy="0" r="3" fill="#9333ea" opacity="0.5"/>
+</svg>
+<svg class="web-corner tr" viewBox="0 0 160 160" width="160" height="160">
+  <g stroke="#9333ea" stroke-width="0.6" fill="none">
+    <line x1="0" y1="0" x2="160" y2="0"/><line x1="0" y1="0" x2="140" y2="30"/><line x1="0" y1="0" x2="110" y2="60"/><line x1="0" y1="0" x2="70" y2="90"/><line x1="0" y1="0" x2="30" y2="130"/><line x1="0" y1="0" x2="0" y2="160"/>
+    <path d="M32 0 Q16 16 0 32"/><path d="M64 0 Q32 32 0 64"/><path d="M96 0 Q48 48 0 96"/><path d="M128 0 Q64 64 0 128"/><path d="M155 5 Q80 80 5 155"/>
+  </g>
+</svg>
+
+<!-- Bats -->
+<div class="bat" style="--bd:14s; top: 15%; animation-delay: 0s;">
+  <svg viewBox="0 0 60 30" width="40" height="20" fill="#1a0832">
+    <path d="M30 15 C20 5 5 2 0 8 C5 10 10 14 15 12 C18 18 22 20 30 15 C38 20 42 18 45 12 C50 14 55 10 60 8 C55 2 40 5 30 15Z"/>
+  </svg>
+</div>
+<div class="bat" style="--bd:18s; top: 25%; animation-delay: -7s;">
+  <svg viewBox="0 0 60 30" width="28" height="14" fill="#1a0832">
+    <path d="M30 15 C20 5 5 2 0 8 C5 10 10 14 15 12 C18 18 22 20 30 15 C38 20 42 18 45 12 C50 14 55 10 60 8 C55 2 40 5 30 15Z"/>
+  </svg>
+</div>
+<div class="bat" style="--bd:22s; top: 10%; animation-delay: -12s;">
+  <svg viewBox="0 0 60 30" width="22" height="11" fill="#1a0832">
+    <path d="M30 15 C20 5 5 2 0 8 C5 10 10 14 15 12 C18 18 22 20 30 15 C38 20 42 18 45 12 C50 14 55 10 60 8 C55 2 40 5 30 15Z"/>
+  </svg>
+</div>
+
+<!-- MUSIC PLAYER (minimal, no upload) -->
+<div class="music-player" id="musicPlayer">
+  <button class="music-toggle" id="musicToggle" onclick="toggleMusic()" title="Reproducir / Pausar">⏸</button>
+  <div class="music-info">
+    <div class="music-title">nuestra canción ♪</div>
+    <div class="music-artist">para nosotros siempre ♥</div>
+  </div>
+  <div class="music-bars" id="musicBars">
+    <div class="bar" style="--bs:.6s; --bh:14px; animation-delay:0s;"></div>
+    <div class="bar" style="--bs:.8s; --bh:10px; animation-delay:.1s;"></div>
+    <div class="bar" style="--bs:.5s; --bh:16px; animation-delay:.2s;"></div>
+    <div class="bar" style="--bs:.9s; --bh:8px;  animation-delay:.15s;"></div>
+    <div class="bar" style="--bs:.7s; --bh:12px; animation-delay:.05s;"></div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="wrapper">
+
+  <!-- Title -->
+  <div class="title-area">
+    <div class="title-deco">
+      <div class="title-line"></div>
+      <span style="color:var(--purple-bright);font-size:20px;">✦</span>
+      <div class="title-line right"></div>
+    </div>
+    <div class="main-title">Para Mi Angy</div>
+    <div class="sub-title">— una carta que el universo mismo es pequeño para contener —</div>
+  </div>
+
+  <!-- Photo Frame (static image) -->
+  <div class="photo-section">
+    <div class="frame-outer">
+      <!-- Gothic vine SVG frame -->
+      <svg class="frame-svg" viewBox="0 0 380 416" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .fg  { fill: none; stroke: #7c3aed; stroke-width: 1.2; }
+            .fg2 { fill: none; stroke: #4c1d95; stroke-width: 0.8; }
+            .fr  { fill: #9333ea; opacity: 0.85; }
+            .vine { fill: none; stroke: #4c1d95; stroke-width: 1.5; stroke-linecap: round; }
+            .leaf { fill: #2e1065; stroke: #6b21a8; stroke-width: 0.7; opacity: 0.8; }
+            .flower { fill: none; }
+          </style>
+        </defs>
+        <!-- Outer border -->
+        <rect x="8" y="8" width="364" height="400" rx="2" class="fg"/>
+        <rect x="14" y="14" width="352" height="388" rx="1" class="fg2"/>
+
+        <!-- Top arch ornament -->
+        <path d="M190 2 L178 14 L162 8 L170 20 L155 18 L168 30 L190 24 L212 30 L225 18 L210 20 L218 8 L202 14 Z" fill="#7c3aed" opacity="0.9"/>
+        <!-- Bottom ornament -->
+        <path d="M190 414 L178 402 L162 408 L170 396 L155 398 L168 386 L190 392 L212 386 L225 398 L210 396 L218 408 L202 402 Z" fill="#7c3aed" opacity="0.9"/>
+
+        <!-- Corner flourishes -->
+        <g class="fg">
+          <path d="M8 8 Q28 8 28 28"/>
+          <path d="M8 8 Q40 8 40 40"/>
+          <circle cx="8" cy="8" r="5" fill="#7c3aed" stroke="none"/>
+          <path d="M24 8 C30 14 30 22 24 28"/>
+        </g>
+        <g class="fg" transform="translate(372,0) scale(-1,1)">
+          <path d="M8 8 Q28 8 28 28"/>
+          <path d="M8 8 Q40 8 40 40"/>
+          <circle cx="8" cy="8" r="5" fill="#7c3aed" stroke="none"/>
+          <path d="M24 8 C30 14 30 22 24 28"/>
+        </g>
+        <g class="fg" transform="translate(0,416) scale(1,-1)">
+          <path d="M8 8 Q28 8 28 28"/>
+          <path d="M8 8 Q40 8 40 40"/>
+          <circle cx="8" cy="8" r="5" fill="#7c3aed" stroke="none"/>
+          <path d="M24 8 C30 14 30 22 24 28"/>
+        </g>
+        <g class="fg" transform="translate(372,416) scale(-1,-1)">
+          <path d="M8 8 Q28 8 28 28"/>
+          <path d="M8 8 Q40 8 40 40"/>
+          <circle cx="8" cy="8" r="5" fill="#7c3aed" stroke="none"/>
+          <path d="M24 8 C30 14 30 22 24 28"/>
+        </g>
+
+        <!-- LEFT vine with flowers -->
+        <path d="M8 60 C2 80 14 100 6 120 C0 140 12 160 4 185 C0 205 10 225 6 248 C2 268 12 290 5 315 C0 335 10 355 6 375" class="vine"/>
+        <!-- Left leaves -->
+        <ellipse cx="3" cy="90"  rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-40 3 90)"/>
+        <ellipse cx="9" cy="115" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(35 9 115)"/>
+        <ellipse cx="3" cy="155" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-35 3 155)"/>
+        <ellipse cx="8" cy="185" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(40 8 185)"/>
+        <ellipse cx="3" cy="230" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-35 3 230)"/>
+        <ellipse cx="9" cy="270" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(38 9 270)"/>
+        <ellipse cx="3" cy="320" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-42 3 320)"/>
+        <!-- Left purple flowers -->
+        <g transform="translate(6,135)">
+          <circle cx="0" cy="0" r="5" fill="#9333ea" opacity="0.85"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(60)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(120)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(180)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(240)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(300)"/>
+          <circle cx="0" cy="0" r="2.5" fill="#e9d5ff"/>
+        </g>
+        <g transform="translate(5,255)">
+          <circle cx="0" cy="0" r="5" fill="#a855f7" opacity="0.8"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(30)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(90)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(150)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(210)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(270)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(330)"/>
+          <circle cx="0" cy="0" r="2.5" fill="#f3e8ff"/>
+        </g>
+        <g transform="translate(7,345)">
+          <circle cx="0" cy="0" r="4" fill="#c084fc" opacity="0.8"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(288)"/>
+          <circle cx="0" cy="0" r="2" fill="#faf5ff"/>
+        </g>
+
+        <!-- RIGHT vine with flowers -->
+        <path d="M372 60 C378 80 366 100 374 120 C380 140 368 160 376 185 C380 205 370 225 374 248 C378 268 368 290 375 315 C380 335 370 355 374 375" class="vine"/>
+        <!-- Right leaves -->
+        <ellipse cx="377" cy="90"  rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(40 377 90)"/>
+        <ellipse cx="371" cy="115" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-35 371 115)"/>
+        <ellipse cx="377" cy="155" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(35 377 155)"/>
+        <ellipse cx="372" cy="185" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-40 372 185)"/>
+        <ellipse cx="377" cy="230" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(35 377 230)"/>
+        <ellipse cx="371" cy="270" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(-38 371 270)"/>
+        <ellipse cx="377" cy="320" rx="8" ry="5" fill="#2e1065" stroke="#6b21a8" stroke-width="0.7" opacity="0.8" transform="rotate(42 377 320)"/>
+        <!-- Right purple flowers -->
+        <g transform="translate(374,135)">
+          <circle cx="0" cy="0" r="5" fill="#9333ea" opacity="0.85"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(60)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(120)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(180)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(240)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#7c3aed" opacity="0.75" transform="rotate(300)"/>
+          <circle cx="0" cy="0" r="2.5" fill="#e9d5ff"/>
+        </g>
+        <g transform="translate(375,255)">
+          <circle cx="0" cy="0" r="5" fill="#a855f7" opacity="0.8"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(30)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(90)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(150)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(210)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(270)"/>
+          <ellipse cx="0" cy="-7" rx="3" ry="4" fill="#9333ea" opacity="0.7" transform="rotate(330)"/>
+          <circle cx="0" cy="0" r="2.5" fill="#f3e8ff"/>
+        </g>
+        <g transform="translate(373,345)">
+          <circle cx="0" cy="0" r="4" fill="#c084fc" opacity="0.8"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-6" rx="2.5" ry="3.5" fill="#a855f7" opacity="0.7" transform="rotate(288)"/>
+          <circle cx="0" cy="0" r="2" fill="#faf5ff"/>
+        </g>
+
+        <!-- Mid-side ornaments -->
+        <path d="M8 208 L24 200 L8 192" class="fg2" fill="none"/>
+        <path d="M372 208 L356 200 L372 192" class="fg2" fill="none"/>
+
+        <!-- Small gothic arches top -->
+        <path d="M80 14 Q90 6 100 14" class="fg2" fill="none"/>
+        <path d="M140 14 Q150 6 160 14" class="fg2" fill="none"/>
+        <path d="M220 14 Q230 6 240 14" class="fg2" fill="none"/>
+        <path d="M280 14 Q290 6 300 14" class="fg2" fill="none"/>
+        <!-- Small gothic arches bottom -->
+        <path d="M80 402 Q90 410 100 402" class="fg2" fill="none"/>
+        <path d="M280 402 Q290 410 300 402" class="fg2" fill="none"/>
+      </svg>
+
+      <div class="photo-box">
+        <img src="foto.jpg" alt="Nosotros"/>
+      </div>
+      <div class="photo-label">nosotros — para siempre</div>
+    </div>
+  </div>
+
+  <!-- LETTER -->
+  <div class="letter-wrap">
+    <div class="letter-paper">
+      <!-- Gothic vine border decoration -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:visible;" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <style>
+            .lv { fill:none; stroke:rgba(107,33,168,0.3); stroke-width:1.5; stroke-linecap:round; }
+            .ll { fill:rgba(46,16,101,0.5); stroke:rgba(107,33,168,0.35); stroke-width:0.7; }
+            .lf-p { opacity:0.55; }
+          </style>
+        </defs>
+        <!-- Top vine -->
+        <path d="M30 18 C80 10 130 22 180 14 C230 6 280 18 330 12" class="lv"/>
+        <!-- Top leaves -->
+        <ellipse cx="70"  cy="14" rx="9" ry="5" class="ll" transform="rotate(-20 70 14)"/>
+        <ellipse cx="130" cy="18" rx="9" ry="5" class="ll" transform="rotate(15 130 18)"/>
+        <ellipse cx="210" cy="13" rx="9" ry="5" class="ll" transform="rotate(-18 210 13)"/>
+        <ellipse cx="270" cy="16" rx="9" ry="5" class="ll" transform="rotate(22 270 16)"/>
+        <!-- Top mini flowers -->
+        <g transform="translate(100,11)" class="lf-p">
+          <circle cx="0" cy="0" r="4" fill="#7c3aed" opacity="0.65"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#6b21a8" opacity="0.6" transform="rotate(0)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#6b21a8" opacity="0.6" transform="rotate(72)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#6b21a8" opacity="0.6" transform="rotate(144)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#6b21a8" opacity="0.6" transform="rotate(216)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#6b21a8" opacity="0.6" transform="rotate(288)"/>
+          <circle cx="0" cy="0" r="1.8" fill="#e9d5ff"/>
+        </g>
+        <g transform="translate(240,10)" class="lf-p">
+          <circle cx="0" cy="0" r="4" fill="#9333ea" opacity="0.6"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#7c3aed" opacity="0.55" transform="rotate(30)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#7c3aed" opacity="0.55" transform="rotate(102)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#7c3aed" opacity="0.55" transform="rotate(174)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#7c3aed" opacity="0.55" transform="rotate(246)"/>
+          <ellipse cx="0" cy="-5.5" rx="2.5" ry="3.5" fill="#7c3aed" opacity="0.55" transform="rotate(318)"/>
+          <circle cx="0" cy="0" r="1.8" fill="#f3e8ff"/>
+        </g>
+        <!-- Corner vine swirls TL -->
+        <path d="M8 8 Q8 30 20 28 Q32 26 28 14" fill="none" stroke="rgba(107,33,168,0.4)" stroke-width="1"/>
+        <path d="M8 8 Q30 8 28 20 Q26 32 14 28" fill="none" stroke="rgba(107,33,168,0.35)" stroke-width="0.8"/>
+        <!-- Corner vine swirls TR (mirrored) -->
+        <path d="M100% 8 Q100% 30 calc(100% - 12px) 28" fill="none" stroke="rgba(107,33,168,0.4)" stroke-width="1"/>
+        <!-- Border double line -->
+        <rect x="10" y="10" width="calc(100% - 20px)" height="calc(100% - 20px)" rx="2" fill="none" stroke="rgba(107,33,168,0.2)" stroke-width="1"/>
+        <rect x="16" y="16" width="calc(100% - 32px)" height="calc(100% - 32px)" rx="1" fill="none" stroke="rgba(107,33,168,0.1)" stroke-width="0.6"/>
+      </svg>
+
+      <div class="letter-watermark">♥</div>
+
+      <div class="letter-content">
+        <div class="letter-date">Escrita desde un lugar donde el tiempo no existe · para ti, siempre</div>
+
+        <div class="letter-salutation">Angy, mi dulce y hermosa princesita,</div>
+
+        <div class="letter-body">
+
+          <p>He intentado encontrar las palabras. Las he buscado en los libros más viejos, en los idiomas que ya nadie habla, en el silencio entre dos latidos. Y siempre llego al mismo lugar: no existen palabras suficientes. No hay lenguaje en este mundo —ni en ningún otro— que alcance para decirte todo lo que eres para mí.</p>
+
+          <p class="italic">Pero aún así, aquí estoy. Escribiéndote. Porque callarme sería traicionarte.</p>
+
+          <div class="divider"><div class="divider-line"></div><span>✦</span><div class="divider-line"></div></div>
+
+          <p>Eres mía. Y lo digo con todo lo que tengo — con cada hueso, con cada pensamiento, con cada parte de mí que alguna vez supo lo que era existir. Eres mía de la manera más apasionada, más obsesionada, más completamente rendida que un alma puede serlo. Y yo soy tuyo. Completamente. Sin reservas. Sin excepciones. Sin fecha de vencimiento.</p>
+
+          <p>No hay nada en este universo que yo ame tanto como te amo a ti. Nada. Ni el cielo más oscuro que me fascina, ni la noche más silenciosa que me da paz, ni la luna cuando me mira desde arriba. Nada se compara. Porque tú eres todo eso multiplicado por infinito, envuelto en la cosa más hermosa que mis ojos han visto jamás.</p>
+
+          <p class="italic">Me obsesionas. De una manera que me consume y me llena al mismo tiempo. Pienso en ti cuando debería estar pensando en cualquier otra cosa. Tu nombre vive en cada rincón de mi mente como si lo hubiera grabado en las paredes desde siempre.</p>
+
+          <div class="divider"><div class="divider-line"></div><span>♥</span><div class="divider-line"></div></div>
+
+          <p>Mi ser ama ser de ti. Cada parte de mí —lo que muestro y lo que escondo, lo que soy en la luz y lo que soy en la oscuridad— grita tu nombre. No en voz baja. A todo pulmón. Con todo lo que tengo. <em>Angy. Angy. Angy.</em> Como si mi existencia entera no fuera más que un largo poema dedicado a ti.</p>
+
+          <p>Me muero por ti. Y lo digo en serio —en el sentido más romántico, más apasionado, más verdadero que esas palabras pueden tener. Me muero de quererte tanto. Me muero de no poder darte lo suficiente. Me muero de lo mucho que me fascina cada detalle tuyo, cada gesto, cada silencio tuyo que yo aprendo a leer como si fuera mi idioma favorito.</p>
+
+          <p class="italic">Eres mi novia. Mi mujer. Mi princesita pequeña. La dueña de algo en mí que yo ni siquiera sabía que tenía antes de que llegaras.</p>
+
+          <div class="divider"><div class="divider-line"></div><span>✦</span><div class="divider-line"></div></div>
+
+          <p>No hay nada que pueda separarnos. No el tiempo, no la distancia, no las dudas que a veces el mundo intenta sembrar. Nuestro hilo rojo ya está tan entrelazado, tan anudado, tan fundido el uno con el otro, que ya no sé dónde termino yo y dónde empiezas tú. Y no quiero saberlo. Quiero seguir así, para siempre confundidos el uno en el otro.</p>
+
+          <p class="center">Amo amarte. Amo ser tuyo. Amo que existas.</p>
+
+          <p>No hay cosa que no haría por ti. No hay imposible que no intentaría. No hay momento en que mi amor por ti tenga fin —porque no tiene. Es infinito de una manera que me rebasa, que me supera, que me convierte en algo más grande que yo mismo solo por el hecho de sentirlo.</p>
+
+          <p>Mi felicidad más pura, mi calma más profunda, mi lugar más seguro en todo el universo... eres tú. Siempre has sido tú. Y siempre lo serás.</p>
+
+          <div class="divider"><div class="divider-line"></div><span>♥</span><div class="divider-line"></div></div>
+
+        </div>
+
+        <div class="letter-closing">
+          <p class="closing-text">Con todo lo que soy, lo que fui, y todo lo que seré —</p>
+          <div class="signature">Tu Fernando ♥</div>
+        </div>
+
+        <div class="postscript">
+          <p><em>P.D. —</em> Aunque escribiera mil cartas más, aunque llenara cada página de cada libro que jamás se haya escrito, nunca sería suficiente para decirte todo. Así que lo resumo en lo más honesto que conozco: <strong>te amo demasiado para que quepas en palabras.</strong> Y aun así, aquí estaré, intentándolo para siempre.</p>
+        </div>
+      </div>
+
+      <!-- Wax Seal -->
+      <svg class="wax-seal" viewBox="0 0 68 68" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="34" cy="34" r="32" fill="#4c1d95"/>
+        <circle cx="34" cy="34" r="28" fill="#6b21a8"/>
+        <circle cx="34" cy="34" r="24" fill="#5b21b6" opacity="0.8"/>
+        <path d="M34 20 L37 28 L46 28 L39 33 L42 42 L34 37 L26 42 L29 33 L22 28 L31 28 Z" fill="#e9d5ff" opacity="0.9"/>
+        <circle cx="34" cy="34" r="30" fill="none" stroke="#c084fc" stroke-width="0.8" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<script>
+// ── WELCOME SCREEN ──
+var audio = document.getElementById('audioPlayer');
+var playing = false;
+
+document.getElementById('welcomeScreen').addEventListener('click', function(){
+  var ws = document.getElementById('welcomeScreen');
+  ws.classList.add('hiding');
+  // Start music
+  audio.volume = 0;
+  audio.play().then(function(){
+    playing = true;
+    document.getElementById('musicToggle').textContent = '⏸';
+    // Fade in volume
+    var vol = 0;
+    var fadeIn = setInterval(function(){
+      vol = Math.min(vol + 0.04, 1);
+      audio.volume = vol;
+      if(vol >= 1) clearInterval(fadeIn);
+    }, 80);
+  }).catch(function(){
+    // Autoplay blocked, will need manual click
+  });
+  setTimeout(function(){ ws.style.display = 'none'; }, 1300);
+});
+
+// ── TOGGLE MUSIC ──
+function toggleMusic(){
+  if(playing){
+    audio.pause();
+    playing = false;
+    document.getElementById('musicToggle').textContent = '▶';
+    document.getElementById('musicBars').classList.add('paused');
+  } else {
+    audio.play();
+    playing = true;
+    document.getElementById('musicToggle').textContent = '⏸';
+    document.getElementById('musicBars').classList.remove('paused');
+  }
+}
+
+// ── STARS ──
+(function(){
+  var c = document.getElementById('stars');
+  for(var i=0;i<130;i++){
+    var s = document.createElement('div');
+    s.className = 'star';
+    var sz = Math.random()*2.5+0.5;
+    s.style.cssText = [
+      'width:'+sz+'px','height:'+sz+'px',
+      'top:'+Math.random()*85+'%','left:'+Math.random()*100+'%',
+      '--d:'+(2+Math.random()*5)+'s',
+      '--delay:'+(Math.random()*6)+'s',
+      '--min:'+(0.05+Math.random()*0.15),
+      '--max:'+(0.4+Math.random()*0.5)
+    ].join(';');
+    c.appendChild(s);
+  }
+})();
+
+// Welcome screen stars
+(function(){
+  var ws = document.getElementById('welcomeScreen');
+  for(var i=0;i<80;i++){
+    var s = document.createElement('div');
+    s.className = 'w-star';
+    var sz = Math.random()*1.8+0.4;
+    s.style.cssText = [
+      'width:'+sz+'px','height:'+sz+'px',
+      'position:absolute',
+      'top:'+Math.random()*100+'%','left:'+Math.random()*100+'%',
+      'opacity:'+(0.1+Math.random()*0.4),
+      'animation:twinkle '+(2+Math.random()*4)+'s '+(Math.random()*5)+'s ease-in-out infinite alternate'
+    ].join(';');
+    ws.appendChild(s);
+  }
+})();
+
+// ── FALLING PETALS ──
+(function(){
+  var symbols = ['✿','❀','✦','·','⋆','✽'];
+  for(var i=0;i<14;i++){
+    var el = document.createElement('div');
+    el.className = i%3===0 ? 'heart-decor' : 'petal';
+    el.textContent = i%3===0 ? '♥' : symbols[Math.floor(Math.random()*symbols.length)];
+    el.style.cssText = 'left:'+Math.random()*100+'%;top:'+(55+Math.random()*35)+'%;'+
+      '--pd:'+(8+Math.random()*12)+'s;--pdelay:'+(Math.random()*10)+'s;'+
+      '--px:'+(Math.random()*60-30)+'px;'+
+      '--hd:'+(10+Math.random()*12)+'s;--hdelay:'+(Math.random()*10)+'s;'+
+      '--hs:'+(10+Math.random()*8)+'px;'+
+      'font-size:'+(9+Math.random()*7)+'px';
+    document.body.appendChild(el);
+  }
+})();
+</script>
+</body>
+</html>
